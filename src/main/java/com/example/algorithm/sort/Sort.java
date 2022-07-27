@@ -1,6 +1,9 @@
-package com.example.algorithm.base;
+package com.example.algorithm.sort;
 
-public class Demo {
+/**
+ * 排序
+ */
+public class Sort {
     public static void main(String[] args) {
         int[] arr = randomArr(10,10);
         selectSort(arr);
