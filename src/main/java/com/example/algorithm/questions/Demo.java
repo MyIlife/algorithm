@@ -1,10 +1,14 @@
 package com.example.algorithm.questions;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -38,9 +42,74 @@ public class Demo {
         throw new RuntimeException("no find");
     }
 
+    /**
+     * 2、题：
+     * 给定两个链表分别代表两个非负整数，链表的每个结点分别分别存储整数的每位数字，且是逆序存储。求解这两个整数的和并以链表的形式返回计算的结果。
+     *
+     * 例如：
+     *   输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+     *   输出：7 -> 0 -> 8
+     */
+    public static Node<Integer> question2(Node<Integer> n1,Node<Integer> n2){
+        Node<Integer> result = new Node<>();
+        question2Recursion(n1,n2,0,result);
+        return result;
+    }
+
+    private static void question2Recursion(Node<Integer> n1, Node<Integer> n2,int carry, Node<Integer> result) {
+        if (n1 == null && n2 == null && carry == 0) {
+            return;
+        }
+        if(n1 == null && n2 == null && carry > 0){
+            Node<Integer> next = new Node<>();
+            next.setData(carry);
+            result.setNext(next);
+            return;
+        }
+
+        int v1 = 0;
+        int v2 = 0;
+        if (n1 != null) {
+            v1 = n1.getData();
+        }
+        if (n2 != null) {
+            v2 = n2.getData();
+        }
+        int sum = v1 + v2 + carry;
+        int newCarry = 0;
+        int value = sum;
+        if (sum > 10) {
+            value = sum / 10;
+            newCarry = 1;
+        }
+        Node<Integer> next = new Node<>();
+        result.setData(value);
+        result.setNext(next);
+        question2Recursion(n1 == null ? null : n1.next, n2 == null ? null : n2.next, newCarry, next);
+    }
+
 
     public static void main(String[] args) {
-        int[] r = question1(new int[]{1, 3, 6, 29, 39, 17}, 40);
-        System.out.println("result:"+ JSONObject.toJSONString(r));
+        Node<Integer> n1 = new Node<>(
+                2,new Node<>(5,new Node<>(9,new Node<>(4,new Node<>(3,null))))
+        );
+
+
+        Node<Integer> n2 = new Node<>(6,new Node<>(1,null));
+        Node<Integer> result = question2(n1, n2);
+        Node<Integer> p = result;
+        while (p != null){
+            System.out.println(p.getData());
+            p = p.next;
+
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class Node<T> {
+        private T data;
+        private Node<T> next;
     }
 }
